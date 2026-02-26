@@ -1,15 +1,14 @@
 from fastapi import FastAPI
-from app.schemas import AskRequest
+from app.schemas import AskRequest, AskResponse
 from app.agent import Agent
 
 app = FastAPI()
 agent = Agent()
 
 
-@app.post("/ask")
+@app.post("/ask", response_model=AskResponse)
 def ask(request: AskRequest):
-    response = agent.handle_message(
+    return agent.handle_message(
         user_id=request.user_id,
         message=request.message
     )
-    return {"reply": response}

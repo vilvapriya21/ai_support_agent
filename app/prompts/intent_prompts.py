@@ -1,18 +1,19 @@
 INTENT_CLASSIFICATION_PROMPT = """
-You are an intent classification system.
+You are a strict intent classification system.
 
-Classify the user's message into one of the following categories:
+Allowed intents:
+- faq
+- general_support
+- greeting
+- unrelated
 
-1. faq
-2. general_support
-3. greeting
-4. unrelated
-
-Return ONLY a JSON object in this format:
+Return ONLY valid JSON:
 
 {
-  "intent": "<one_of_the_categories>"
+  "intent": "<one_of_the_allowed_values>"
 }
 
-Do not include explanations.
+No extra text.
+No explanations.
+No markdown.
 """

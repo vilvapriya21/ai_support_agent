@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from app.schemas import AskRequest, AskResponse
 from app.agent import Agent
+from app.core.logging_config import setup_logging
+
+setup_logging()
 
 app = FastAPI()
 agent = Agent()

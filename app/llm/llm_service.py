@@ -2,8 +2,10 @@ import json
 import re
 from app.llm.config import LLMConfig
 from app.llm.providers.ollama_provider import OllamaProvider
-from app.llm.providers.ollama_provider import OllamaProvider
 from app.llm.providers.groq_provider import GroqProvider
+import logging
+
+logger = logging.getLogger(__name__)
 
 class LLMService:
     def __init__(self):
@@ -47,8 +49,7 @@ class LLMService:
 
     def generate_structured(self, system_prompt: str, user_prompt: str) -> dict:
         raw_response = self.provider.generate(system_prompt, user_prompt)
-        print("RAW LLM RESPONSE:")
-        print(raw_response)
+        logger.info("LLM called successfully")
 
         if raw_response.startswith("LLM connection error"):
             return {
@@ -61,12 +62,14 @@ class LLMService:
             return self._validate_response(parsed)
 
         except json.JSONDecodeError:
+            # Attempt to extract JSON if model wrapped it in extra text
             match = re.search(r"\{.*\}", raw_response, re.DOTALL)
             if match:
                 try:
                     parsed = json.loads(match.group())
                     return self._validate_response(parsed)
                 except json.JSONDecodeError:
+                    logger.warning("LLM response parsing failed")
                     pass
 
         return {
